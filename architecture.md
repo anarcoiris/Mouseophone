@@ -26,8 +26,12 @@ Para que el ratón actúe como un sensor de vibración (micrófono), la captura 
 - **Timestamping**: Crucial para el análisis de ruido (SNR). Cada evento se marca con el tiempo de llegada de alta precisión (QPC en Windows, `timeval` en Linux).
 
 ### Renderer Thread (Consumidor)
-- **Timeline Continua**: A diferencia de una app de mouse estándar, el Renderer **siempre** genera muestras a la frecuencia de salida (ej. 48kHz). Si no hay eventos, genera muestras de valor cero (o ruido de cuantización del sensor si existen eventos mínimos).
+- **Timeline Continua**: A diferencia de una app de mouse estándar, el Renderer **siempre** genera muestras a la frecuencia de salida (ej. 16kHz o 48kHz). Si no hay eventos, genera muestras de valor cero.
+- **Cadena de Procesado Avanzada (v1.2)**: 
+  - **Calibración**: Captura del PSD (Power Spectral Density) del ruido del sensor óptico.
+  - **Filtro Wiener**: Aplicación de sustracción espectral en tiempo real sobre frames FFT para eliminar el "sensor jitter".
 - **Análisis de SNR**: La arquitectura permite grabar el "silencio" del ratón para medir el ruido de fondo del sensor óptico versus la vibración real inducida mecánicamente.
+
 
 
 ## 3. Formato de Audio WAV
@@ -43,7 +47,8 @@ Se utiliza el formato **WAV RIFF PCM 16-bit Little-Endian**.
 | Fase | Alcance | Criterio de Aceptación |
 |---|---|---|
 | **Phase 0 — Entorno** | Validar WSL2 + usbipd + evdev | `evtest` muestra eventos REL_X/REL_Y incluso por micro-vibraciones. |
-| **Phase 1 — MVP** | App C++ dual (Win/Linux) con captura continua y análisis de SNR. | El WAV generado tiene una línea de tiempo real. Se puede distinguir el ruido del sensor (estático) de la vibración inducida. |
+| **Phase 1a — MVP** | App C++ dual (Win/Linux) con captura continua y análisis de SNR. | El WAV generado tiene una línea de tiempo real. Se puede distinguir el ruido del sensor (estático) de la vibración inducida. |
+| **Phase 1b — Optimización** | Filtro Wiener y calibración espectral (Basado en arXiv:2509.13581v2). | El ruido de sensor ("sensor jitter") se reduce drásticamente tras la calibración, aumentando la claridad de la vibración capturada. |
 
 ## 5. Resampling (Upsampling)
 
