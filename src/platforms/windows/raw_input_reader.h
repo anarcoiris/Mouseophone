@@ -1,23 +1,19 @@
-#ifndef MOUSEOFONO_PLATFORMS_WINDOWS_RAW_INPUT_READER_H
-#define MOUSEOFONO_PLATFORMS_WINDOWS_RAW_INPUT_READER_H
-
+#pragma once
 #ifdef _WIN32
 
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include "../../core/ring_buffer.h"
 #include <atomic>
 #include <functional>
-#include <windows.h>
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 namespace mouseofono::platforms::windows {
 
-using EventCallback = std::function<void(double t, double dx, double dy)>;
-
 class RawInputReader {
 public:
-  RawInputReader(EventCallback callback);
+  using EventCallback = std::function<void(double t, double dx, double dy)>;
+
+  explicit RawInputReader(EventCallback callback);
   ~RawInputReader();
 
   bool start();
@@ -37,4 +33,3 @@ private:
 } // namespace mouseofono::platforms::windows
 
 #endif // _WIN32
-#endif // MOUSEOFONO_PLATFORMS_WINDOWS_RAW_INPUT_READER_H

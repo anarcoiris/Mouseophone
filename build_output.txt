@@ -1,0 +1,501 @@
+Versión de MSBuild 17.14.23+b0019275e para .NET Framework
+
+  main.cpp
+C:\Users\soyko\Documents\Mouseofono\src\main.cpp(14,9): warning C4005: '_USE_MATH_DEFINES': redefinición de macro [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+      C:\Users\soyko\Documents\Mouseofono\src\main.cpp(14,9):
+      '_USE_MATH_DEFINES' declarado previamente en la línea de comandos
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(94,9): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(94,21): error C2146: error de sintaxis: falta ';' delante del identificador 'MMVERSION' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(94,21): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(98,32): error C2059: error de sintaxis: 'return' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(102,20): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(102,21): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(112,21): error C3646: 'ms': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(112,9): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(113,21): error C3646: 'sample': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(113,9): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(114,21): error C3646: 'cb': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(114,9): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(115,21): error C3646: 'ticks': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(115,9): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(120,21): error C3646: 'hour': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(120,13): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(121,21): error C3646: 'min': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(121,13): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(122,21): error C3646: 'sec': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(122,13): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(123,21): error C3646: 'frame': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(123,13): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(124,21): error C3646: 'fps': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(124,13): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(125,21): error C3646: 'dummy': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(125,13): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(127,21): error C3646: 'pad': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(127,24): error C2143: error de sintaxis: falta ',' delante de '[' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(127,27): error C2238: símbolos (token) inesperados delante de ';' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(134,19): error C3646: 'songptrpos': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(134,13): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,26): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,27): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,41): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,37): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,37): error C2377: 'FAR': nueva definición; typedef no se puede sobrecargar con ningún otro símbolo [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(102,14):
+      vea la declaración de 'FAR'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,42): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(275,16): error C2065: 'HDRVR': identificador no declarado [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(275,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(297,24): error C2146: error de sintaxis: falta ')' delante del identificador 'DRVCALLBACK' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(297,24): error C2146: error de sintaxis: falta ';' delante del identificador 'DRVCALLBACK' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(297,35): error C2059: error de sintaxis: ')' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(297,37): error C2065: 'HDRVR': identificador no declarado [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(297,43): error C2146: error de sintaxis: falta ')' delante del identificador 'hdrvr' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(299,9): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(299,21): error C2146: error de sintaxis: falta ';' delante del identificador 'FAR' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(299,25): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(299,21): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(299,21): error C2086: 'int FAR': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,37):
+      vea la declaración de 'FAR'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(299,26): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(36,9): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(36,17): error C2146: error de sintaxis: falta ';' delante del identificador 'MCIERROR' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(36,17): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(44,24): error C2143: error de sintaxis: falta ')' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(44,24): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(44,15): error C2371: 'CALLBACK': nueva definición; tipos básicos distintos [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(297,15):
+      vea la declaración de 'CALLBACK'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(44,34): error C2059: error de sintaxis: ')' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(44,25): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(50,1): error C2146: error de sintaxis: falta ';' delante del identificador 'MCIERROR' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(59,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(59,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(60,1): error C2146: error de sintaxis: falta ';' delante del identificador 'MCIERROR' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(74,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(74,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(75,1): error C2146: error de sintaxis: falta ';' delante del identificador 'MCIERROR' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(84,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(84,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(85,1): error C2146: error de sintaxis: falta ';' delante del identificador 'MCIERROR' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(99,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(99,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(100,1): error C2146: error de sintaxis: falta ';' delante del identificador 'MCIDEVICEID' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(106,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(106,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(107,1): error C2146: error de sintaxis: falta ';' delante del identificador 'MCIDEVICEID' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(118,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(118,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(119,1): error C2146: error de sintaxis: falta ';' delante del identificador 'MCIDEVICEID' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(126,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(126,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(127,1): error C2146: error de sintaxis: falta ';' delante del identificador 'MCIDEVICEID' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(139,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(139,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(140,1): error C2146: error de sintaxis: falta ';' delante del identificador 'BOOL' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(148,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(148,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(149,1): error C2146: error de sintaxis: falta ';' delante del identificador 'BOOL' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(170,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(170,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(171,1): error C2146: error de sintaxis: falta ';' delante del identificador 'BOOL' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(198,1): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(198,1): error C2086: 'int DECLSPEC_IMPORT': nueva definición [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(49,1):
+      vea la declaración de 'DECLSPEC_IMPORT'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(199,1): error C2146: error de sintaxis: falta ';' delante del identificador 'BOOL' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(496,17): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(496,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(497,47): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(497,43): error C2371: 'FAR': nueva definición; tipos básicos distintos [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,37):
+      vea la declaración de 'FAR'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(497,48): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(503,17): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(503,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(505,16): error C3646: 'lpstrDeviceType': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(505,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(506,16): error C3646: 'lpstrElementName': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(506,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(507,16): error C3646: 'lpstrAlias': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(507,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(510,17): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(510,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(512,16): error C3646: 'lpstrDeviceType': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(512,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(513,16): error C3646: 'lpstrElementName': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(513,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(514,16): error C3646: 'lpstrAlias': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(514,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(539,17): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(539,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(542,41): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(542,37): error C2371: 'FAR': nueva definición; tipos básicos distintos [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,37):
+      vea la declaración de 'FAR'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(542,42): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(546,17): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(546,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(548,41): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(548,37): error C2371: 'FAR': nueva definición; tipos básicos distintos [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,37):
+      vea la declaración de 'FAR'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(548,42): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(552,17): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(552,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(553,17): error C3646: 'dwReturn': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(553,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(556,45): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(556,41): error C2371: 'FAR': nueva definición; tipos básicos distintos [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,37):
+      vea la declaración de 'FAR'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(556,47): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(562,15): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(562,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(563,15): error C3646: 'lpstrReturn': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(563,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(567,15): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(567,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(568,15): error C3646: 'lpstrReturn': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(568,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(589,17): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(589,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(592,53): error C2143: error de sintaxis: falta ';' delante de '*' [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(592,49): error C2371: 'FAR': nueva definición; tipos básicos distintos [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mmsyscom.h(137,37):
+      vea la declaración de 'FAR'
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(592,55): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(598,17): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(598,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(599,17): error C3646: 'lpstrReturn': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(599,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(605,17): error C3646: 'dwCallback': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(605,5): error C4430: falta el especificador de tipo; se presupone int. Nota: C++ no admite default-int [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(606,17): error C3646: 'lpstrReturn': especificador de invalidación desconocido [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\mciapi.h(606,17): error C1003: el recuento de errores supera 100; se detiene la compilación [C:\Users\soyko\Documents\Mouseofono\build\mouseofono.vcxproj]
+  (compilando archivo de origen "../src/main.cpp")
+  

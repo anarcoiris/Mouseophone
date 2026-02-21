@@ -16,7 +16,7 @@ if(WIN32)
     set(PLATFORM_SOURCES
         src/platforms/windows/raw_input_reader.cpp
     )
-    set(PLATFORM_LIBS user32)
+    set(PLATFORM_LIBS user32 winmm)
 else()
     # Placeholder for Linux
     set(PLATFORM_SOURCES

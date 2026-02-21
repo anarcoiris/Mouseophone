@@ -95,7 +95,10 @@ bool RawInputReader::start() {
   if (m_running)
     return false;
   m_running = true;
-  std::thread([this]() { messageLoop(); }).detach();
+  std::thread([this]() {
+    SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+    messageLoop();
+  }).detach();
   return true;
 }
 

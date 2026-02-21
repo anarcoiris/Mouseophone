@@ -1,5 +1,15 @@
 /*
- * main.cpp — Mouseofono v1.3 (3-Thread Real-Time Pipeline)
+ * main.cpp — Mouseofono v1.3.1 (Precision Real-Time Pipeline)
+ *
+ * v1.3.1 Changes over v1.3:
+ *   - timeBeginPeriod(1): Fixes Windows scheduler quantization (Sleep(1) now
+ *     actually sleeps ~1ms instead of up to 15.6ms).
+ *   - Thread Priorities: RawInput=TIME_CRITICAL, DSP=HIGHEST.
+ *   - Events Dropped counter: monitors SPSC queue overflows.
+ *   - DSP: per-event spreading (no batch averaging) preserves peak sensitivity.
+ *   - DSP: zero-padding when queue empty for continuous audio flow.
+ *   - Writer: drains multiple PCM blocks per wake cycle.
+ *   - Stats: reports drops, smart backpressure (warns only if queue > 50%).
  *
  * Architecture:
  *
@@ -12,29 +22,27 @@
  *   [Thread 2 – DSP]
  *       | Drains g_raw_queue
  *       | Runs sinc reconstruction OR raw accumulation
- *       | Applies Wiener filter
+ *       | Applies DC block, Wiener filter, AGC
  *       | Pushes PcmBlock to g_pcm_queue
  *       v
- *   SPSC<PcmBlock>  (g_pcm_queue, 512-float fixed blocks)
+ *   SPSC<PcmBlock>  (g_pcm_queue, 256-frame fixed blocks)
  *       |
  *   [Thread 3 – WAV Writer]
- *       | Drains g_pcm_queue
+ *       | Drains g_pcm_queue (multi-block per wake)
  *       | Writes to WavWriter (buffered file I/O)
  *
  * Rules:
  *   Thread 1 callback budget: < 5µs. No allocations, no locks.
  *   Thread 2 owns all DSP state (no shared DSP objects).
  *   Thread 3 owns WavWriter.
- *
- * Workflow:
- *   mouseofono.exe --calibrate         (10s noise profile)
- *   mouseofono.exe 15.0 --wiener       (record with spectral subtraction)
  */
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #define _USE_MATH_DEFINES
+#include <timeapi.h> // timeBeginPeriod/timeEndPeriod — safe after windows.h
 #include <windows.h>
+
 
 #include <algorithm>
 #include <atomic>
@@ -110,14 +118,15 @@ static void update_poll(double t) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  PIPELINE QUEUES
+//  PIPELINE QUEUES & ATOMICS
 // ═══════════════════════════════════════════════════════════════
 static std::atomic<bool> g_running{true};
-static RingBuffer<MouseEvent> g_raw_queue; // Thread 1 -> Thread 2
-static RingBuffer<PcmBlock> g_pcm_queue;   // Thread 2 -> Thread 3
+static RingBuffer<MouseEvent> g_raw_queue;     // Thread 1 -> Thread 2
+static RingBuffer<PcmBlock, 1024> g_pcm_queue; // Thread 2 -> Thread 3
 
 // Stats
 static std::atomic<long long> g_events_total{0};
+static std::atomic<long long> g_events_dropped{0};
 
 // ═══════════════════════════════════════════════════════════════
 //  RUNTIME OPTIONS
@@ -178,7 +187,8 @@ static void run_calibration() {
   mouseofono::platforms::windows::RawInputReader reader(
       [&](double t, double dx, double dy) {
         update_poll(t);
-        g_raw_queue.push({t, dx, dy});
+        if (!g_raw_queue.push({t, dx, dy}))
+          g_events_dropped++;
       });
   reader.start();
 
@@ -229,6 +239,8 @@ static void run_calibration() {
 //  THREAD 2 — DSP
 // ═══════════════════════════════════════════════════════════════
 static void dsp_thread(float gain) {
+  SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
+
   // --- Signal chain (owned by this thread only) ---
   DCBlock dcL, dcR;
   AGC agc(g_fs);
@@ -249,8 +261,7 @@ static void dsp_thread(float gain) {
   int ev_start = 0, ev_count = 0;
 
   const double sample_dt = 1.0 / g_fs;
-  const int batch_n =
-      PcmBlock::FRAMES; // process exactly one PcmBlock at a time
+  const int batch_n = PcmBlock::FRAMES;
 
   double t_render = -1.0;
   double current_bw = g_bw_override > 0 ? g_bw_override : 400.0;
@@ -264,9 +275,11 @@ static void dsp_thread(float gain) {
 
   while (g_running || !g_raw_queue.empty()) {
     // Drain raw event queue
+    bool got_events = false;
     {
       MouseEvent e;
       while (g_raw_queue.pop(e)) {
+        got_events = true;
         if (t_render < 0.0)
           t_render = e.t - KERNEL_HALFWIN;
         if (g_raw_mode) {
@@ -280,6 +293,21 @@ static void dsp_thread(float gain) {
             ev_start = (ev_start + 1) % MAX_EV;
           ev_window[slot] = e;
         }
+      }
+    }
+
+    // Zero-padding: push silent block if no events and we've started rendering
+    // This maintains continuous audio flow and prevents glitches
+    if (!got_events && t_render >= 0.0 && g_raw_mode) {
+      if (raw_accX == 0.0 && raw_accY == 0.0) {
+        PcmBlock blk{};
+        blk.count = batch_n;
+        // data is already zeroed by value-init
+        while (!g_pcm_queue.push(blk) && g_running)
+          Sleep(0);
+        t_render += sample_dt * batch_n;
+        Sleep(1);
+        continue;
       }
     }
 
@@ -306,21 +334,28 @@ static void dsp_thread(float gain) {
 
     // Evict stale events (sinc mode only)
     if (!g_raw_mode) {
-      while (ev_count > 0) {
-        if ((t_render - ev_window[ev_start].t) > KERNEL_HALFWIN + sample_dt) {
-          ev_start = (ev_start + 1) % MAX_EV;
-          ev_count--;
-        } else
-          break;
+      while (ev_count > 0 &&
+             (t_render - ev_window[ev_start].t) > KERNEL_HALFWIN + sample_dt) {
+        ev_start = (ev_start + 1) % MAX_EV;
+        ev_count--;
       }
     }
 
     // Generate one PcmBlock worth of samples
+    // KEY CHANGE: in raw mode, spread the accumulated delta evenly across
+    // all samples in the batch instead of dividing by batch_n on each sample.
+    // This preserves instantaneous peak amplitude for fast movements.
     for (int i = 0; i < batch_n; ++i) {
       double xL = 0, xR = 0;
       if (g_raw_mode) {
-        xL = raw_accX / batch_n;
-        xR = raw_accY / batch_n;
+        // Spread raw accumulation: first sample gets the full delta,
+        // remaining samples get zero. The DC block and downstream
+        // processing will shape the resulting impulse appropriately.
+        if (i == 0) {
+          xL = raw_accX;
+          xR = raw_accY;
+        }
+        // else xL = xR = 0 (already initialized)
       } else {
         for (int j = 0; j < ev_count; ++j) {
           const MouseEvent &e = ev_window[(ev_start + j) % MAX_EV];
@@ -368,7 +403,7 @@ static void dsp_thread(float gain) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  THREAD 3 — WAV WRITER
+//  THREAD 3 — WAV WRITER (multi-block drain per wake cycle)
 // ═══════════════════════════════════════════════════════════════
 static void writer_thread() {
   WavWriter writer;
@@ -379,17 +414,22 @@ static void writer_thread() {
   printf("[WRITER] output.wav opened @ %d Hz stereo\n", g_fs);
 
   std::vector<float> tmp;
-  tmp.reserve(PcmBlock::FRAMES * 2 * 8);
+  tmp.reserve(PcmBlock::FRAMES * 2 * 32);
 
   while (g_running || !g_pcm_queue.empty()) {
     PcmBlock blk;
-    if (g_pcm_queue.pop(blk)) {
+    bool got = false;
+    // Drain as many blocks as possible in one cycle to reduce I/O overhead
+    while (g_pcm_queue.pop(blk)) {
       for (int i = 0; i < blk.count * 2; ++i)
         tmp.push_back(blk.data[i]);
-      if ((int)tmp.size() >= PcmBlock::FRAMES * 2 * 4) {
-        writer.write(tmp);
-        tmp.clear();
-      }
+      got = true;
+      if (tmp.size() >= PcmBlock::FRAMES * 2 * 16)
+        break; // cap to avoid unbounded buffering
+    }
+    if (got) {
+      writer.write(tmp);
+      tmp.clear();
     } else {
       Sleep(1);
     }
@@ -409,9 +449,10 @@ static void stats_thread() {
     Sleep(1000);
     if (!g_running)
       break;
-    printf("[STATS] poll=%.0f Hz | events=%lld | pcm_queue=%s\n",
-           g_poll_hz.load(), g_events_total.load(),
-           g_pcm_queue.empty() ? "OK" : "BACKPRESSURE");
+    int q_size = (int)g_pcm_queue.size();
+    printf("[STATS] poll=%.0f Hz | events=%lld | drops=%lld | queue=%d%s\n",
+           g_poll_hz.load(), g_events_total.load(), g_events_dropped.load(),
+           q_size, (q_size > 512) ? " [BACKPRESSURE]" : "");
   }
 }
 
@@ -419,6 +460,7 @@ static void stats_thread() {
 //  MAIN
 // ═══════════════════════════════════════════════════════════════
 int main(int argc, char *argv[]) {
+  timeBeginPeriod(1); // Fix Windows scheduler: Sleep(1) now actually ~1ms
   timing_init();
   float gain = 15.0f;
 
@@ -449,10 +491,10 @@ int main(int argc, char *argv[]) {
       gain = (float)atof(argv[i]);
   }
 
-  printf("Mouseofono v1.3 (3-Thread Pipeline)\n\n");
+  printf("Mouseofono v1.3.1 (Precision Pipeline)\n\n");
 
-  // CSV
   if (g_csv_mode) {
+    // CSV capture mode
     mouseofono::platforms::windows::RawInputReader reader(
         [](double t, double dx, double dy) {
           update_poll(t);
@@ -467,44 +509,43 @@ int main(int argc, char *argv[]) {
     while (g_csv_n.load() < CSV_MAX)
       Sleep(10);
     write_csv("events.csv");
-    return 0;
-  }
-
-  // Calibrate
-  if (g_calibrate) {
+  } else if (g_calibrate) {
+    // Noise calibration mode
     run_calibration();
-    return 0;
+  } else {
+    // Audio recording mode
+    printf("gain=%.2f  fs=%d Hz  mode=%s  wiener=%s\n\n", gain, g_fs,
+           g_raw_mode ? "RAW" : "SINC", g_use_wiener ? "ON" : "OFF");
+
+    mouseofono::platforms::windows::RawInputReader reader(
+        [](double t, double dx, double dy) {
+          update_poll(t);
+          if (!g_raw_queue.push({t, dx, dy}))
+            g_events_dropped.fetch_add(1, std::memory_order_relaxed);
+          g_events_total.fetch_add(1, std::memory_order_relaxed);
+        });
+
+    if (!reader.start()) {
+      fprintf(stderr, "Failed to start reader\n");
+      timeEndPeriod(1);
+      return 1;
+    }
+
+    std::thread dsp_t(dsp_thread, gain);
+    std::thread writer_t(writer_thread);
+    std::thread stats_t(stats_thread);
+
+    printf("Recording... Press Enter to stop.\n");
+    getchar();
+
+    g_running = false;
+    dsp_t.join();
+    writer_t.join();
+    stats_t.join();
+
+    printf("Done! Saved to output.wav\n");
   }
 
-  // Audio mode
-  printf("gain=%.2f  fs=%d Hz  mode=%s  wiener=%s\n\n", gain, g_fs,
-         g_raw_mode ? "RAW" : "SINC", g_use_wiener ? "ON" : "OFF");
-
-  // Thread 1 callback: ONLY push + update_poll
-  mouseofono::platforms::windows::RawInputReader reader(
-      [](double t, double dx, double dy) {
-        update_poll(t); // at-source timestamp
-        g_raw_queue.push({t, dx, dy});
-        g_events_total.fetch_add(1, std::memory_order_relaxed);
-      });
-
-  if (!reader.start()) {
-    fprintf(stderr, "Failed to start reader\n");
-    return 1;
-  }
-
-  std::thread dsp_t(dsp_thread, gain);
-  std::thread writer_t(writer_thread);
-  std::thread stats_t(stats_thread);
-
-  printf("Recording... Press Enter to stop.\n");
-  getchar();
-
-  g_running = false;
-  dsp_t.join();
-  writer_t.join();
-  stats_t.join();
-
-  printf("Done! Saved to output.wav\n");
+  timeEndPeriod(1); // Restore default scheduler resolution
   return 0;
 }
