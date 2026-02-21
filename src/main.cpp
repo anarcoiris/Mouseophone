@@ -1,24 +1,34 @@
 /*
- * main.cpp — Mouseofono v1.2 (Wiener Filter Edition)
+ * main.cpp — Mouseofono v1.3 (3-Thread Real-Time Pipeline)
  *
- * New in v1.2:
- *   --calibrate  Capture 10s of mouse jitter noise -> saves noise_profile.bin
- *   --wiener     Load noise_profile.bin and apply spectral subtraction filter
- *   --fs <hz>    Override sample rate (default 16000 for vibration sensing)
- *   --fft <n>    FFT frame size for Wiener filter (default 512, must be power
- * of 2)
- *   --alpha <f>  Over-subtraction factor (default 1.5). Higher = more
- * aggressive noise removal.
- *   --beta <f>   Spectral floor (default 0.02). Prevents musical noise
- * artifacts.
+ * Architecture:
  *
- * Recommended workflow (based on arXiv:2509.13581v2):
- *   1. mouseofono.exe --calibrate          (mouse still, measuring sensor
- * jitter)
- *   2. mouseofono.exe 15.0 --raw --wiener  (record with noise removal active)
- *   3. Import output.wav in Audacity for SNR analysis
+ *   [Thread 1 – RawInput]                     Windows message loop (HWND)
+ *       | ONLY: QPC timestamp, push to SPSC
+ *       | update_poll() called HERE (at-source timestamps)
+ *       v
+ *   SPSC<MouseEvent>  (g_raw_queue)
+ *       |
+ *   [Thread 2 – DSP]
+ *       | Drains g_raw_queue
+ *       | Runs sinc reconstruction OR raw accumulation
+ *       | Applies Wiener filter
+ *       | Pushes PcmBlock to g_pcm_queue
+ *       v
+ *   SPSC<PcmBlock>  (g_pcm_queue, 512-float fixed blocks)
+ *       |
+ *   [Thread 3 – WAV Writer]
+ *       | Drains g_pcm_queue
+ *       | Writes to WavWriter (buffered file I/O)
  *
- * NOTE: Ensure mouse is NOT in usbipd 'Shared' state before running.
+ * Rules:
+ *   Thread 1 callback budget: < 5µs. No allocations, no locks.
+ *   Thread 2 owns all DSP state (no shared DSP objects).
+ *   Thread 3 owns WavWriter.
+ *
+ * Workflow:
+ *   mouseofono.exe --calibrate         (10s noise profile)
+ *   mouseofono.exe 15.0 --wiener       (record with spectral subtraction)
  */
 
 #define WIN32_LEAN_AND_MEAN
@@ -32,7 +42,6 @@
 #include <cstdio>
 #include <cstring>
 #include <fstream>
-#include <iostream>
 #include <string>
 #include <thread>
 #include <vector>
@@ -46,16 +55,22 @@
 using namespace mouseofono::core;
 
 // ═══════════════════════════════════════════════════════════════
-//  CONFIG DEFAULTS
+//  CONSTANTS & DEFAULTS
 // ═══════════════════════════════════════════════════════════════
 static const char *NOISE_PROFILE_PATH = "noise_profile.bin";
 static constexpr double KERNEL_HALFWIN = 0.003;
-static constexpr int DEFAULT_FS =
-    16000; // optimised for speech/vibration per paper
 static constexpr int CALIB_SECS = 10;
 
+// PCM block exchanged between DSP and WAV Writer threads.
+// Fixed-size avoids heap alloc in the hot DSP path.
+struct PcmBlock {
+  static constexpr int FRAMES = 256; // stereo frames per block
+  float data[FRAMES * 2];            // interleaved L R
+  int count;                         // actual valid frames (≤ FRAMES)
+};
+
 // ═══════════════════════════════════════════════════════════════
-//  QPC TIMING
+//  QPC TIMING  (global, read by all threads)
 // ═══════════════════════════════════════════════════════════════
 static LARGE_INTEGER g_qpc_freq;
 static void timing_init() { QueryPerformanceFrequency(&g_qpc_freq); }
@@ -66,25 +81,24 @@ static inline double qpc_now() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  GLOBALS
+//  POLL RATE ESTIMATOR  (called from Thread 1 callback)
 // ═══════════════════════════════════════════════════════════════
-static std::atomic<bool> g_running{true};
-static RingBuffer<MouseEvent> g_queue;
-static std::atomic<long long> g_events_total{0};
 static std::atomic<double> g_poll_hz{1000.0};
 static std::atomic<bool> g_poll_ready{false};
 
+// NOTE: called from Thread 1 only — no synchronisation needed on locals.
 static void update_poll(double t) {
-  static double iv[256] = {};
+  static double iv[512] = {};
   static int idx = 0;
   static double prev = 0.0;
   if (prev > 0.0) {
     double dt = t - prev;
-    if (dt > 0.0 && dt < 0.05) {
-      iv[idx++ & 255] = dt;
-      if (idx >= 64) {
-        double s[256];
-        int n = std::min(idx, 256);
+    if (dt > 5e-5 && dt < 0.02) { // 50µs – 20ms window
+      iv[idx & 511] = dt;
+      ++idx;
+      if (idx >= 128 && (idx & 63) == 0) { // re-estimate every 64 new samples
+        double s[512];
+        int n = std::min(idx, 512);
         memcpy(s, iv, n * sizeof(double));
         std::sort(s, s + n);
         g_poll_hz.store(1.0 / s[n / 2], std::memory_order_relaxed);
@@ -95,26 +109,37 @@ static void update_poll(double t) {
   prev = t;
 }
 
-// CSV
-static constexpr int CSV_MAX = 20000;
-static MouseEvent g_csv_buf[CSV_MAX];
-static std::atomic<int> g_csv_n{0};
+// ═══════════════════════════════════════════════════════════════
+//  PIPELINE QUEUES
+// ═══════════════════════════════════════════════════════════════
+static std::atomic<bool> g_running{true};
+static RingBuffer<MouseEvent> g_raw_queue; // Thread 1 -> Thread 2
+static RingBuffer<PcmBlock> g_pcm_queue;   // Thread 2 -> Thread 3
 
-// Runtime options
+// Stats
+static std::atomic<long long> g_events_total{0};
+
+// ═══════════════════════════════════════════════════════════════
+//  RUNTIME OPTIONS
+// ═══════════════════════════════════════════════════════════════
 static bool g_csv_mode = false;
-static bool g_raw_mode = true; // default raw for vibration
-static bool g_use_agc = false; // off by default (preserve amplitude for SNR)
+static bool g_raw_mode = true;
+static bool g_use_agc = false;
 static bool g_use_wiener = false;
 static bool g_calibrate = false;
 static double g_bw_override = -1.0;
-static int g_fs = DEFAULT_FS;
+static int g_fs = 16000;
 static int g_fft_n = 512;
 static float g_alpha = 1.5f;
 static float g_beta = 0.02f;
 
 // ═══════════════════════════════════════════════════════════════
-//  CSV WRITER
+//  CSV
 // ═══════════════════════════════════════════════════════════════
+static constexpr int CSV_MAX = 20000;
+static MouseEvent g_csv_buf[CSV_MAX];
+static std::atomic<int> g_csv_n{0};
+
 static void write_csv(const char *path) {
   int n = g_csv_n.load();
   std::ofstream f(path);
@@ -133,49 +158,41 @@ static void write_csv(const char *path) {
     dts.push_back(g_csv_buf[i].t - g_csv_buf[i - 1].t);
   std::sort(dts.begin(), dts.end());
   double med = dts[dts.size() / 2];
-  printf("[CSV] %d events -> %s\n  poll=%.0f Hz | max_bw=%.0f Hz -> use --bw "
-         "%.0f\n",
-         n, path, 1.0 / med, 0.45 / med, 0.45 / med);
+  printf("[CSV] %d events | poll=%.0f Hz | max_safe_bw=%.0f Hz\n", n, 1.0 / med,
+         0.45 / med);
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  CALIBRATION MODE — captures noise profile from idle mouse
+//  CALIBRATION MODE
 // ═══════════════════════════════════════════════════════════════
 static void run_calibration() {
-  printf("[CALIBRATE] Capturing %ds of sensor noise. DO NOT MOVE THE MOUSE.\n",
-         CALIB_SECS);
-  printf("[CALIBRATE] This will characterise the optical sensor jitter at "
-         "current DPI.\n\n");
-
+  printf("[CALIBRATE] %ds noise capture. Keep mouse STILL.\n\n", CALIB_SECS);
   WienerFilter wf(g_fft_n, g_alpha, g_beta);
-  WavWriter recorder;
-  // Record raw signal into a temp buffer for noise PSD estimation
   std::vector<float> calib_buf;
-  calib_buf.reserve(g_fs * CALIB_SECS);
+  calib_buf.reserve(g_fs * CALIB_SECS + 4096);
 
-  // Use a simple raw-amplitude renderer for calibration recording
-  double t_render = -1.0;
-  double t_start = -1.0;
+  double t_render = -1.0, t_start = -1.0;
+  double raw_accum = 0.0;
+  DCBlock dc;
 
   mouseofono::platforms::windows::RawInputReader reader(
-      [](double t, double dx, double dy) { g_queue.push({t, dx, dy}); });
+      [&](double t, double dx, double dy) {
+        update_poll(t);
+        g_raw_queue.push({t, dx, dy});
+      });
   reader.start();
 
   const double sample_dt = 1.0 / g_fs;
-  const int batch_n = (int)(g_fs * 0.005);
-  DCBlock dcL;
-  double raw_accum = 0.0;
+  const int batch_n = std::max(1, (int)(g_fs * 0.005));
 
-  printf("[CALIBRATE] Recording...\n");
-  while (g_running) {
+  while (true) {
     MouseEvent e;
-    while (g_queue.pop(e)) {
+    while (g_raw_queue.pop(e)) {
       if (t_render < 0.0) {
-        t_render = e.t - 0.01;
+        t_render = e.t;
         t_start = e.t;
       }
       raw_accum += e.dx + e.dy;
-      update_poll(e.t);
     }
     if (t_start > 0 && qpc_now() - t_start > CALIB_SECS)
       break;
@@ -191,92 +208,65 @@ static void run_calibration() {
     }
 
     for (int i = 0; i < batch_n; ++i) {
-      float s = (float)(dcL.process(raw_accum / batch_n));
-      calib_buf.push_back(s);
+      calib_buf.push_back((float)(dc.process(raw_accum / batch_n)));
       t_render += sample_dt;
     }
     raw_accum = 0.0;
   }
 
-  printf("[CALIBRATE] Captured %zu samples. Building noise PSD...\n",
+  printf("[CALIBRATE] %zu samples collected. Building PSD...\n",
          calib_buf.size());
   wf.feed_calibration(calib_buf.data(), (int)calib_buf.size());
   wf.finalize_calibration();
-
-  if (wf.save_noise_profile(NOISE_PROFILE_PATH)) {
-    printf("[CALIBRATE] Noise profile saved to '%s'\n", NOISE_PROFILE_PATH);
-    printf("[CALIBRATE] Run: mouseofono.exe 15.0 --raw --wiener\n");
-  } else {
-    printf("[CALIBRATE] ERROR: Failed to save noise profile.\n");
-  }
+  if (wf.save_noise_profile(NOISE_PROFILE_PATH))
+    printf("[CALIBRATE] Saved -> %s\nNext: mouseofono.exe 15.0 --wiener\n",
+           NOISE_PROFILE_PATH);
+  else
+    printf("[CALIBRATE] ERROR: could not save profile.\n");
 }
 
 // ═══════════════════════════════════════════════════════════════
-//  STATS THREAD
+//  THREAD 2 — DSP
 // ═══════════════════════════════════════════════════════════════
-static void stats_thread() {
-  while (g_running) {
-    Sleep(1000);
-    if (!g_running)
-      break;
-    printf("[STATS] poll=~%.0f Hz | events=%lld\n", g_poll_hz.load(),
-           g_events_total.load());
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  AUDIO RENDERER THREAD
-// ═══════════════════════════════════════════════════════════════
-static void audio_thread(float gain) {
+static void dsp_thread(float gain) {
+  // --- Signal chain (owned by this thread only) ---
   DCBlock dcL, dcR;
   AGC agc(g_fs);
-  WavWriter writer;
   WienerFilter wf(g_fft_n, g_alpha, g_beta);
 
   if (g_use_wiener) {
-    if (!wf.load_noise_profile(NOISE_PROFILE_PATH)) {
-      fprintf(stderr,
-              "[WIENER] WARNING: Could not load '%s'. Run --calibrate first.\n",
-              NOISE_PROFILE_PATH);
-      fprintf(stderr, "[WIENER] Continuing without noise filter.\n");
-    } else {
-      printf("[WIENER] Noise profile loaded. Spectral subtraction active.\n");
-      printf("[WIENER] alpha=%.2f beta=%.2f fft_n=%d\n", g_alpha, g_beta,
-             g_fft_n);
-    }
+    if (!wf.load_noise_profile(NOISE_PROFILE_PATH))
+      fprintf(stderr, "[WIENER] WARNING: no profile. Run --calibrate first.\n");
+    else
+      printf("[WIENER] Profile loaded. alpha=%.2f beta=%.2f fft=%d\n", g_alpha,
+             g_beta, g_fft_n);
   }
 
-  if (!writer.open("output.wav", g_fs, 2)) {
-    std::cerr << "Failed to open output.wav\n";
-    return;
-  }
+  SignalReconstructor reconstructor(400.0, KERNEL_HALFWIN, g_fs);
 
-  SignalReconstructor reconstructor(g_bw_override > 0 ? g_bw_override
-                                                      : 0.45 * g_poll_hz.load(),
-                                    KERNEL_HALFWIN, g_fs);
-
-  static constexpr int MAX_EV = 256;
+  static constexpr int MAX_EV = 512;
   MouseEvent ev_window[MAX_EV];
   int ev_start = 0, ev_count = 0;
 
-  std::vector<float> out_buf;
-  out_buf.reserve(4096);
-
   const double sample_dt = 1.0 / g_fs;
-  const int batch_n = std::max(1, (int)(g_fs * 0.005));
+  const int batch_n =
+      PcmBlock::FRAMES; // process exactly one PcmBlock at a time
 
   double t_render = -1.0;
   double current_bw = g_bw_override > 0 ? g_bw_override : 400.0;
   double raw_accX = 0.0, raw_accY = 0.0;
 
-  printf("[AUDIO] Recording @ %d Hz | %s | wiener=%s\n", g_fs,
-         g_raw_mode ? "RAW" : "SINC", g_use_wiener ? "ON" : "OFF");
+  // Wiener processing buffers (reused, no alloc in loop)
+  std::vector<float> batchL(batch_n), batchR(batch_n);
 
-  while (g_running) {
+  printf("[DSP] Started @ %d Hz | mode=%s\n", g_fs,
+         g_raw_mode ? "RAW" : "SINC");
+
+  while (g_running || !g_raw_queue.empty()) {
+    // Drain raw event queue
     {
       MouseEvent e;
-      while (g_queue.pop(e)) {
-        update_poll(e.t);
+      while (g_raw_queue.pop(e)) {
         if (t_render < 0.0)
           t_render = e.t - KERNEL_HALFWIN;
         if (g_raw_mode) {
@@ -290,7 +280,6 @@ static void audio_thread(float gain) {
             ev_start = (ev_start + 1) % MAX_EV;
           ev_window[slot] = e;
         }
-        g_events_total.fetch_add(1, std::memory_order_relaxed);
       }
     }
 
@@ -299,25 +288,26 @@ static void audio_thread(float gain) {
       continue;
     }
 
-    // Adaptive bandwidth update
+    // Adaptive bandwidth update (only after poll is stable)
     if (g_bw_override < 0 && g_poll_ready.load()) {
       double safe_bw = 0.45 * g_poll_hz.load();
-      if (std::abs(safe_bw - current_bw) > 1.0) {
+      if (std::abs(safe_bw - current_bw) > 5.0) {
         current_bw = safe_bw;
         reconstructor = SignalReconstructor(current_bw, KERNEL_HALFWIN, g_fs);
+        printf("[DSP] Bandwidth adapted -> %.0f Hz\n", current_bw);
       }
     }
 
+    // Don't render more than 10ms ahead of real time
     if (t_render > qpc_now() + 0.010) {
       Sleep(1);
       continue;
     }
 
-    // Evict stale sinc events
+    // Evict stale events (sinc mode only)
     if (!g_raw_mode) {
       while (ev_count > 0) {
-        const MouseEvent &oldest = ev_window[ev_start];
-        if ((t_render - oldest.t) > KERNEL_HALFWIN + sample_dt) {
+        if ((t_render - ev_window[ev_start].t) > KERNEL_HALFWIN + sample_dt) {
           ev_start = (ev_start + 1) % MAX_EV;
           ev_count--;
         } else
@@ -325,8 +315,7 @@ static void audio_thread(float gain) {
       }
     }
 
-    // Generate batch
-    std::vector<float> batchL(batch_n), batchR(batch_n);
+    // Generate one PcmBlock worth of samples
     for (int i = 0; i < batch_n; ++i) {
       double xL = 0, xR = 0;
       if (g_raw_mode) {
@@ -350,13 +339,15 @@ static void audio_thread(float gain) {
       raw_accY = 0.0;
     }
 
-    // Apply Wiener filter to each channel independently
+    // Wiener filter (both channels in-place)
     if (g_use_wiener && wf.is_calibrated()) {
       wf.process_inplace(batchL.data(), batch_n);
       wf.process_inplace(batchR.data(), batch_n);
     }
 
-    // AGC + clip, then interleave
+    // Build PcmBlock and push to writer queue
+    PcmBlock blk;
+    blk.count = batch_n;
     for (int i = 0; i < batch_n; ++i) {
       float fL = batchL[i], fR = batchR[i];
       if (g_use_agc) {
@@ -364,20 +355,64 @@ static void audio_thread(float gain) {
         fL *= g;
         fR *= g;
       }
-      out_buf.push_back(soft_clip(fL));
-      out_buf.push_back(soft_clip(fR));
-      if ((int)out_buf.size() >= 2048) {
-        writer.write(out_buf);
-        out_buf.clear();
+      blk.data[i * 2] = soft_clip(fL);
+      blk.data[i * 2 + 1] = soft_clip(fR);
+    }
+    // Spin-wait if pcm queue is full (rare, writer is fast)
+    while (!g_pcm_queue.push(blk) && g_running)
+      Sleep(0);
+  }
+
+  printf("[DSP] Done. poll=%.0f Hz | bw=%.0f Hz\n", g_poll_hz.load(),
+         current_bw);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  THREAD 3 — WAV WRITER
+// ═══════════════════════════════════════════════════════════════
+static void writer_thread() {
+  WavWriter writer;
+  if (!writer.open("output.wav", g_fs, 2)) {
+    fprintf(stderr, "[WRITER] Failed to open output.wav\n");
+    return;
+  }
+  printf("[WRITER] output.wav opened @ %d Hz stereo\n", g_fs);
+
+  std::vector<float> tmp;
+  tmp.reserve(PcmBlock::FRAMES * 2 * 8);
+
+  while (g_running || !g_pcm_queue.empty()) {
+    PcmBlock blk;
+    if (g_pcm_queue.pop(blk)) {
+      for (int i = 0; i < blk.count * 2; ++i)
+        tmp.push_back(blk.data[i]);
+      if ((int)tmp.size() >= PcmBlock::FRAMES * 2 * 4) {
+        writer.write(tmp);
+        tmp.clear();
       }
+    } else {
+      Sleep(1);
     }
   }
 
-  if (!out_buf.empty())
-    writer.write(out_buf);
+  if (!tmp.empty())
+    writer.write(tmp);
   writer.close();
-  printf("[AUDIO] Done. poll=%.0f Hz | bw=%.0f Hz | fs=%d\n", g_poll_hz.load(),
-         current_bw, g_fs);
+  printf("[WRITER] Closed.\n");
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  STATS THREAD
+// ═══════════════════════════════════════════════════════════════
+static void stats_thread() {
+  while (g_running) {
+    Sleep(1000);
+    if (!g_running)
+      break;
+    printf("[STATS] poll=%.0f Hz | events=%lld | pcm_queue=%s\n",
+           g_poll_hz.load(), g_events_total.load(),
+           g_pcm_queue.empty() ? "OK" : "BACKPRESSURE");
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -385,7 +420,7 @@ static void audio_thread(float gain) {
 // ═══════════════════════════════════════════════════════════════
 int main(int argc, char *argv[]) {
   timing_init();
-  float gain = 15.0f; // default higher for vibration sensing
+  float gain = 15.0f;
 
   for (int i = 1; i < argc; ++i) {
     if (strcmp(argv[i], "--csv") == 0)
@@ -414,13 +449,13 @@ int main(int argc, char *argv[]) {
       gain = (float)atof(argv[i]);
   }
 
-  printf("Mouseofono v1.2\n\n");
+  printf("Mouseofono v1.3 (3-Thread Pipeline)\n\n");
 
-  // ── CSV MODE ─────────────────────────────────────────────────
+  // CSV
   if (g_csv_mode) {
-    printf("--csv: Capturing %d events...\n", CSV_MAX);
     mouseofono::platforms::windows::RawInputReader reader(
         [](double t, double dx, double dy) {
+          update_poll(t);
           int i = g_csv_n.load(std::memory_order_relaxed);
           if (i < CSV_MAX) {
             g_csv_buf[i] = {t, dx, dy};
@@ -428,43 +463,48 @@ int main(int argc, char *argv[]) {
           }
         });
     reader.start();
-    printf("Move mouse continuously...\n");
+    printf("Move mouse.. capturing %d events\n", CSV_MAX);
     while (g_csv_n.load() < CSV_MAX)
-      Sleep(50);
+      Sleep(10);
     write_csv("events.csv");
     return 0;
   }
 
-  // ── CALIBRATE MODE ────────────────────────────────────────────
+  // Calibrate
   if (g_calibrate) {
     run_calibration();
     return 0;
   }
 
-  // ── AUDIO MODE ────────────────────────────────────────────────
-  printf("gain=%.2f  fs=%d Hz  mode=%s  wiener=%s  agc=%s\n", gain, g_fs,
-         g_raw_mode ? "RAW" : "SINC", g_use_wiener ? "ON" : "OFF",
-         g_use_agc ? "ON" : "OFF");
-  printf("\nWorkflow:\n");
-  printf("  1. mouseofono.exe --calibrate    (noise profile, mouse still)\n");
-  printf("  2. mouseofono.exe 15.0 --wiener  (record with filter active)\n\n");
+  // Audio mode
+  printf("gain=%.2f  fs=%d Hz  mode=%s  wiener=%s\n\n", gain, g_fs,
+         g_raw_mode ? "RAW" : "SINC", g_use_wiener ? "ON" : "OFF");
 
+  // Thread 1 callback: ONLY push + update_poll
   mouseofono::platforms::windows::RawInputReader reader(
-      [](double t, double dx, double dy) { g_queue.push({t, dx, dy}); });
+      [](double t, double dx, double dy) {
+        update_poll(t); // at-source timestamp
+        g_raw_queue.push({t, dx, dy});
+        g_events_total.fetch_add(1, std::memory_order_relaxed);
+      });
+
   if (!reader.start()) {
     fprintf(stderr, "Failed to start reader\n");
     return 1;
   }
 
-  std::thread audio_t(audio_thread, gain);
+  std::thread dsp_t(dsp_thread, gain);
+  std::thread writer_t(writer_thread);
   std::thread stats_t(stats_thread);
 
   printf("Recording... Press Enter to stop.\n");
   getchar();
 
   g_running = false;
-  audio_t.join();
+  dsp_t.join();
+  writer_t.join();
   stats_t.join();
+
   printf("Done! Saved to output.wav\n");
   return 0;
 }
