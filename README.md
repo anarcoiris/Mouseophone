@@ -67,4 +67,4 @@ This project implements techniques described in the paper *"Invisible Ears at Yo
 Feel free to open issues or submit PRs. The move towards Phase 2 (Docker and multi-channel support) is currently underway.
 
 ---
-*Developed by Antigravity AI.*
+*Developed by Santiago Javier Espino Heredero.*
